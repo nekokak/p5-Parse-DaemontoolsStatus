@@ -59,15 +59,24 @@ __END__
 
 =head1 NAME
 
-Parse::DaemontoolsStatus -
+Parse::DaemontoolsStatus - parse daemontools status line
 
 =head1 SYNOPSIS
 
   use Parse::DaemontoolsStatus;
+  my $data = Parse::DaemontoolsStatus->parse($line);
+  __END__
+  $data = +{
+      service => '/service/some_app',
+      status  => 'down',
+      pid     => undef,
+      seconds => 10,
+      info    => '',
+  };
 
 =head1 DESCRIPTION
 
-Parse::DaemontoolsStatus is
+Parse::DaemontoolsStatus is parse daemontools status line
 
 =head1 AUTHOR
 
