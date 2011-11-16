@@ -1,7 +1,7 @@
 package Parse::DaemontoolsStatus;
 use strict;
 use warnings;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub parse {
     my $line = shift;
@@ -15,7 +15,7 @@ sub parse {
         (\S+)\s          # $2 status
         \(pid\s(\S+)\)\s # $3 pid
         (\S+)\s seconds  # $4 seconds
-        (,?\s?.*)       # $5 info
+        (,?\s?.*)        # $5 info
         $
     /x;
 
@@ -33,15 +33,33 @@ sub parse {
     # parse down status line
     $line =~ /
         ^
-        (\S+):\s         # $1  service
-        (\S+)\s          # $2  status
-        (\S+)\s seconds  # $3  seconds
+        (\S+):\s         # $1 service
+        (\S+)\s          # $2 status
+        (\S+)\s seconds  # $3 seconds
         (,?\s?.*)        # $4 info
         $
     /x;
 
     ($service, $status, $pid, $seconds, $info) = ($1,$2,undef,$3,$4);
     $info =~ s/^,\s// if $info;
+
+    return +{
+        service => $service,
+        status  => $status,
+        pid     => $pid,
+        seconds => $seconds,
+        info    => $info,
+    } if $service;
+
+    # parse not running status line
+    $line =~ /
+        ^
+        (\S+):\s                  # $1 service
+        (supervise\snot\srunning) # $2 status
+        $
+    /x;
+
+    ($service, $status, $pid, $seconds, $info) = ($1,$2,undef,0,'');
 
     return +{
         service => $service,

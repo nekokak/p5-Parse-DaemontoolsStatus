@@ -46,6 +46,13 @@ my %tests = (
         seconds => 10,
         info    => '',
     },
+    '/service/some_app: supervise not running' => +{
+        service => '/service/some_app',
+        status  => 'supervise not running',
+        pid     => undef,
+        seconds => 0,
+        info    => '',
+    },
 );
 
 for my $service (keys %tests) {
